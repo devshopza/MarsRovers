@@ -26,7 +26,7 @@ Microsoft Visual Studio 2019 Community
 
 * 3 - MarsRovers.Console :: This solution is a console app that has a pre-defined samples file (BulkDeploy.txt) and runs as a Batch Command (Multiple Deployment)
 
-* 5 - MarsRovers.WebAPI :: This is a WebAPI with a index.html (UI for deploying rovers) that calls the WebAPI via jQuery.ajax and displayes the "Rover" movement log in a Google Chart - this is the default project
+* 4 - MarsRovers.WebAPI :: This is a WebAPI with a index.html (UI for deploying rovers) that calls the WebAPI via jQuery.ajax and displayes the "Rover" movement log in a Google Chart - this is the default project
 
 ## Built With
 
