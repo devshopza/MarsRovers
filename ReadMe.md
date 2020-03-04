@@ -1,6 +1,6 @@
-# Project Title
+# Mars Rover Challenge
 
-Mars Rover Challenge :: https://code.google.com/archive/p/marsrovertechchallenge/
+https://code.google.com/archive/p/marsrovertechchallenge/
 
 ## Getting Started
 
