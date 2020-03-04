@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Deploy Mars Rovers</title>
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="container">
+        <h5 class="text-info">
+            <b>Note: </b>Please Enter all required info:
+        </h5>
+        <form name="postform" id="postform" class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="text-info">Plateau X Coordinate</label>
+                        <input type="number" min="5" max="100" id="txtPlateauX" placeholder="X" class="form-control" value="5" required />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="text-info">Plateau Y Coordinate</label>
+                        <input type="number" min="5" max="100" id="txtPlateauY" placeholder="Y" class="form-control" value="5" required />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="text-info">Rover X Coordinate</label>
+                        <input type="number" max="100" id="txtStartPositionX" class="form-control" placeholder="X" value="1" required />
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="text-info">Rover Y Coordinate</label>
+                        <input type="number" max="100" id="txtStartPositionY" class="form-control" placeholder="Y" value="2" required />
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="text-info">Rover Direction</label>
+                        <select id="txtStartDirection" class="form-control" required>
+                            <option value="N">North</option>
+                            <option value="E">East</option>
+                            <option value="S">South</option>
+                            <option value="W">West</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="text-info">Rover Move Commands</label>
+                <input type="text" id="txtMoveCommands" class="form-control" maxlength="50" value="LMLMLMLMM" required />
+            </div>
+            <button id="submit" type="submit" class="btn btn-success">Deploy Rover</button>
+            <p></p>
+            <div id="msg"></div>
+
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <div id="chart_div" style="width: 100%; height: 500px;"></div>
+
+        </form>
+
+        <script>
+            $(document).ready(function () {
+                var submit = $("#submit");
+                var msg = $("#msg");
+
+                $("#postform").submit(function (e) {
+                    e.preventDefault();
+                    submit.prop('disabled', true);
+                    submit.text("Deploying Rover...");
+                    var deployapiurl = "api/Rover/DeployRover";
+                    var logapiurl = "api/Rover/GetRoverMoveLog";
+                    var data = {
+                        Plateau: $("#txtPlateauX").val().trim() + ' ' + $("#txtPlateauY").val().trim(),
+                        StartPosition: $("#txtStartPositionX").val().trim() + ' ' + $("#txtStartPositionY").val().trim() + ' ' + $("#txtStartDirection").val().trim(),
+                        MoveCommands: $("#txtMoveCommands").val().trim()
+                    }
+                    $.ajax({
+                        url: deployapiurl,
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                            submit.prop('disabled', false);
+                            submit.text("Deploy Rover");
+                            msg.html("<b>The Rover Stopped Here: </b>" + response);
+                        },
+                        error: function (response) {
+                            submit.prop('disabled', false);
+                            submit.text("Deploy Rover");
+                            msg.html("<div class='text-danger'><b>Error: <b/>" + JSON.parse(response.responseText).Message + "</div>");
+                        }
+                    });
+
+                    $.ajax({
+                        url: logapiurl,
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                            google.charts.load('current', { 'packages': ['corechart'] });
+                            google.charts.setOnLoadCallback(drawChart);
+
+                            function drawChart() {
+                                var data = new google.visualization.DataTable();
+                                data.addColumn('number', 'X');
+                                data.addColumn('number', 'Y')
+                                data.addRows(JSON.parse(response));
+
+                                var options = {
+                                    title: 'Rover Plateau Movement',
+                                    hAxis: { title: 'X', minValue: 0, maxValue: $("#txtPlateauX").val().trim() },
+                                    vAxis: { title: 'Y', minValue: 0, maxValue: $("#txtPlateauY").val().trim() },
+                                    legend: 'none'
+                                };
+
+                                var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+                                chart.draw(data, options);
+                            }
+
+                        },
+                        error: function (response) {
+                            msg.html("<div class='text-danger'><b>Error: <b/>" + JSON.parse(response.responseText).Message + "</div>");
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
