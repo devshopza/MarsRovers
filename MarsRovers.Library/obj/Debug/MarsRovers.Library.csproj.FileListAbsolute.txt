@@ -1,0 +1,5 @@
+E:\Projects\Platform45\MarsRovers\MarsRovers.Library\bin\Debug\MarsRovers.Library.dll
+E:\Projects\Platform45\MarsRovers\MarsRovers.Library\bin\Debug\MarsRovers.Library.pdb
+E:\Projects\Platform45\MarsRovers\MarsRovers.Library\obj\Debug\MarsRovers.Library.csprojAssemblyReference.cache
+E:\Projects\Platform45\MarsRovers\MarsRovers.Library\obj\Debug\MarsRovers.Library.dll
+E:\Projects\Platform45\MarsRovers\MarsRovers.Library\obj\Debug\MarsRovers.Library.pdb
